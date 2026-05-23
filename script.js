@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     initThemeToggle();
-    initNetworkBackground();
+    initPhotographyBackground();
     initAgeGate();
     initShareButton();
     initTiltEffect();
@@ -8,17 +8,17 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 /* ==========================================
-   0. GESTION DU THÈME (Jour / Nuit) CORRIGÉ
+   0. GESTION DU THÈME (Jour / Nuit)
    ========================================== */
 function initThemeToggle() {
     const themeBtn = document.getElementById('theme-btn');
-    const icon = document.getElementById('theme-icon'); // Cible l'ID de manière stricte
+    const icon = document.getElementById('theme-icon');
     
     const savedTheme = localStorage.getItem('blackamber_theme');
     
     if (savedTheme === 'dark') {
         document.body.setAttribute('data-theme', 'dark');
-        icon.className = 'ph ph-sun'; // Remplacement brut et sûr de la classe
+        icon.className = 'ph ph-sun';
     }
 
     themeBtn.addEventListener('click', () => {
@@ -42,13 +42,49 @@ function initThemeToggle() {
 function initAgeGate() {
     const ageGate = document.getElementById('age-gate');
     const btnYes = document.getElementById('btn-yes');
+    const btnNo = document.getElementById('btn-no'); // NOUVEAU : Sélection du bouton non
     const mainContent = document.getElementById('main-content');
+    const exclusiveLinks = document.querySelectorAll('.link-btn.highlight');
+    let targetUrl = '';
 
+    // 1. On affiche le site immédiatement au chargement
+    mainContent.classList.add('loaded');
+
+    // 2. On écoute les clics sur les plateformes exclusives
+    exclusiveLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault(); 
+            targetUrl = e.currentTarget.href; 
+            
+            ageGate.style.display = 'flex';
+            setTimeout(() => {
+                ageGate.classList.remove('hidden');
+            }, 10);
+        });
+    });
+
+    // 3. Si l'utilisateur clique sur "Oui"
     btnYes.addEventListener('click', () => {
+        if (targetUrl) {
+            window.open(targetUrl, '_blank'); 
+            targetUrl = ''; 
+        }
+        
         ageGate.classList.add('hidden');
         setTimeout(() => {
             ageGate.style.display = 'none';
-            mainContent.classList.add('loaded');
+        }, 500);
+    });
+
+    // 4. NOUVEAU : Si l'utilisateur clique sur "Non, quitter"
+    btnNo.addEventListener('click', (e) => {
+        e.preventDefault(); // Annule le comportement du lien
+        targetUrl = ''; // Efface la destination de la plateforme exclusive
+        
+        // Referme simplement la fenêtre en douceur
+        ageGate.classList.add('hidden');
+        setTimeout(() => {
+            ageGate.style.display = 'none';
         }, 500);
     });
 }
@@ -74,93 +110,77 @@ function initShareButton() {
 }
 
 /* ==========================================
-   3. FOND ANIMÉ : RÉSEAU DE PARTICULES
+   3. FOND ANIMÉ : BOKEH CINÉMATOGRAPHIQUE
    ========================================== */
-function initNetworkBackground() {
+function initPhotographyBackground() {
     const canvas = document.getElementById('sky-canvas');
     const ctx = canvas.getContext('2d');
     
     let width = canvas.width = window.innerWidth;
     let height = canvas.height = window.innerHeight;
-    let mouse = { x: null, y: null, radius: 150 };
 
-    window.addEventListener('mousemove', (e) => { mouse.x = e.clientX; mouse.y = e.clientY; });
-    window.addEventListener('mouseout', () => { mouse.x = null; mouse.y = null; });
     window.addEventListener('resize', () => {
         width = canvas.width = window.innerWidth;
         height = canvas.height = window.innerHeight;
-        initParticles();
+        initBokeh();
     });
 
-    let particles = [];
+    let orbs = [];
     
-    class Particle {
+    class BokehOrb {
         constructor() {
             this.x = Math.random() * width;
             this.y = Math.random() * height;
-            this.size = Math.random() * 3 + 1;
-            this.speedX = (Math.random() - 0.5) * 1.5;
-            this.speedY = (Math.random() - 0.5) * 1.5;
-            this.color = Math.random() > 0.5 ? '#15b8a6' : '#38bdf8';
+            this.size = Math.random() * 80 + 30; 
+            this.speedX = (Math.random() - 0.5) * 0.4;
+            this.speedY = (Math.random() - 0.5) * 0.4;
+            
+            const isTurquoise = Math.random() > 0.4;
+            this.colorRGB = isTurquoise ? '21, 184, 166' : '255, 255, 255';
+            this.maxAlpha = Math.random() * 0.15 + 0.05;
         }
+        
         update() {
-            if (this.x > width || this.x < 0) this.speedX = -this.speedX;
-            if (this.y > height || this.y < 0) this.speedY = -this.speedY;
             this.x += this.speedX;
             this.y += this.speedY;
 
-            if (mouse.x != null) {
-                let dx = mouse.x - this.x;
-                let dy = mouse.y - this.y;
-                let distance = Math.sqrt(dx * dx + dy * dy);
-                if (distance < mouse.radius) {
-                    const force = (mouse.radius - distance) / mouse.radius;
-                    this.x -= (dx / distance) * force * 2;
-                    this.y -= (dy / distance) * force * 2;
-                }
-            }
+            if (this.x > width + this.size) this.x = -this.size;
+            if (this.x < -this.size) this.x = width + this.size;
+            if (this.y > height + this.size) this.y = -this.size;
+            if (this.y < -this.size) this.y = height + this.size;
         }
+        
         draw() {
             ctx.beginPath();
+            const gradient = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.size);
+            gradient.addColorStop(0, `rgba(${this.colorRGB}, ${this.maxAlpha})`);
+            gradient.addColorStop(0.6, `rgba(${this.colorRGB}, ${this.maxAlpha * 0.4})`);
+            gradient.addColorStop(1, `rgba(${this.colorRGB}, 0)`);
+            
+            ctx.fillStyle = gradient;
             ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-            ctx.fillStyle = this.color;
             ctx.fill();
         }
     }
 
-    function initParticles() {
-        particles = [];
-        const numParticles = window.innerWidth < 768 ? 40 : 80;
-        for (let i = 0; i < numParticles; i++) particles.push(new Particle());
-    }
-
-    function connectParticles() {
-        for (let a = 0; a < particles.length; a++) {
-            for (let b = a; b < particles.length; b++) {
-                let dx = particles[a].x - particles[b].x;
-                let dy = particles[a].y - particles[b].y;
-                let distance = Math.sqrt(dx * dx + dy * dy);
-                if (distance < 120) {
-                    let opacity = 1 - (distance / 120);
-                    ctx.strokeStyle = `rgba(21, 184, 166, ${opacity * 0.5})`;
-                    ctx.lineWidth = 1;
-                    ctx.beginPath();
-                    ctx.moveTo(particles[a].x, particles[a].y);
-                    ctx.lineTo(particles[b].x, particles[b].y);
-                    ctx.stroke();
-                }
-            }
+    function initBokeh() {
+        orbs = [];
+        const numOrbs = window.innerWidth < 768 ? 15 : 30;
+        for (let i = 0; i < numOrbs; i++) {
+            orbs.push(new BokehOrb());
         }
     }
 
     function animate() {
         ctx.clearRect(0, 0, width, height);
-        particles.forEach(p => { p.update(); p.draw(); });
-        connectParticles();
+        orbs.forEach(orb => {
+            orb.update();
+            orb.draw();
+        });
         requestAnimationFrame(animate);
     }
 
-    initParticles();
+    initBokeh();
     animate();
 }
 
