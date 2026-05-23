@@ -15,7 +15,6 @@
     --avatar-border: #ffffff;
     --ripple-color: rgba(0, 0, 0, 0.05);
     --btn-hover-bg: rgba(255, 255, 255, 0.9);
-    --badge-border: #ffffff;
 }
 
 [data-theme="dark"] {
@@ -32,7 +31,6 @@
     --avatar-border: var(--accent-turquoise);
     --ripple-color: rgba(255, 255, 255, 0.1);
     --btn-hover-bg: rgba(255, 255, 255, 0.08);
-    --badge-border: #0f172a;
 }
 
 * {
@@ -99,15 +97,12 @@ body {
     z-index: 1; opacity: 0;
 }
 
-/* =========================================
-   NOUVEAU : BARRE D'ACTIONS CENTRÉE
-========================================= */
 .top-bar {
     display: flex;
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    margin-bottom: -1rem; /* Pour rapprocher l'avatar visuellement */
+    margin-bottom: -1rem;
 }
 
 .action-btn {
@@ -159,32 +154,6 @@ body {
     color: var(--highlight-text);
 }
 .link-btn.highlight:hover { background: rgba(21, 184, 166, 0.15); }
-
-/* =========================================
-   NOUVEAU : BADGE VIP
-========================================= */
-.badge-vip {
-    position: absolute;
-    top: -10px;
-    right: -10px;
-    background: linear-gradient(135deg, #f59e0b, #d97706); /* Or vif */
-    color: #ffffff;
-    font-size: 0.75rem;
-    font-weight: 800;
-    letter-spacing: 0.5px;
-    padding: 4px 12px;
-    border-radius: 20px;
-    box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);
-    border: 2px solid var(--badge-border);
-    animation: pulse-vip 2s infinite cubic-bezier(0.4, 0, 0.6, 1);
-    z-index: 5;
-    pointer-events: none; /* Empêche le badge de bloquer le clic du bouton */
-}
-
-@keyframes pulse-vip {
-    0%, 100% { transform: scale(1); box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4); }
-    50% { transform: scale(1.05) rotate(3deg); box-shadow: 0 6px 20px rgba(245, 158, 11, 0.7); }
-}
 
 .ripple {
     position: absolute; border-radius: 50%; transform: scale(0);
