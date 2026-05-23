@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    initThemeToggle(); // NOUVEAU : Lance la gestion du thème
+    initThemeToggle();
     initNetworkBackground();
     initAgeGate();
     initShareButton();
@@ -8,32 +8,29 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 /* ==========================================
-   0. GESTION DU THÈME (Jour / Nuit)
+   0. GESTION DU THÈME (Jour / Nuit) CORRIGÉ
    ========================================== */
 function initThemeToggle() {
     const themeBtn = document.getElementById('theme-btn');
-    const icon = themeBtn.querySelector('i');
+    const icon = document.getElementById('theme-icon'); // Cible l'ID de manière stricte
     
-    // Récupérer la préférence sauvegardée
     const savedTheme = localStorage.getItem('blackamber_theme');
     
-    // Appliquer le thème sauvegardé
     if (savedTheme === 'dark') {
         document.body.setAttribute('data-theme', 'dark');
-        icon.classList.replace('ph-moon', 'ph-sun');
+        icon.className = 'ph ph-sun'; // Remplacement brut et sûr de la classe
     }
 
-    // Gérer le clic sur le bouton
     themeBtn.addEventListener('click', () => {
         const currentTheme = document.body.getAttribute('data-theme');
         
         if (currentTheme === 'dark') {
             document.body.removeAttribute('data-theme');
-            icon.classList.replace('ph-sun', 'ph-moon');
+            icon.className = 'ph ph-moon';
             localStorage.setItem('blackamber_theme', 'light');
         } else {
             document.body.setAttribute('data-theme', 'dark');
-            icon.classList.replace('ph-moon', 'ph-sun');
+            icon.className = 'ph ph-sun';
             localStorage.setItem('blackamber_theme', 'dark');
         }
     });
@@ -57,7 +54,7 @@ function initAgeGate() {
 }
 
 /* ==========================================
-   2. BOUTON DE PARTAGE NATIF (Web Share API)
+   2. BOUTON DE PARTAGE NATIF
    ========================================== */
 function initShareButton() {
     const shareBtn = document.getElementById('share-btn');
@@ -72,9 +69,7 @@ function initShareButton() {
                 text: 'Découvrez l\'univers exclusif de Black Amber.',
                 url: window.location.href
             });
-        } catch (err) {
-            console.log('Partage annulé ou erreur :', err);
-        }
+        } catch (err) {}
     });
 }
 
@@ -119,11 +114,9 @@ function initNetworkBackground() {
                 let dy = mouse.y - this.y;
                 let distance = Math.sqrt(dx * dx + dy * dy);
                 if (distance < mouse.radius) {
-                    const forceDirectionX = dx / distance;
-                    const forceDirectionY = dy / distance;
                     const force = (mouse.radius - distance) / mouse.radius;
-                    this.x -= forceDirectionX * force * 2;
-                    this.y -= forceDirectionY * force * 2;
+                    this.x -= (dx / distance) * force * 2;
+                    this.y -= (dy / distance) * force * 2;
                 }
             }
         }
@@ -172,7 +165,7 @@ function initNetworkBackground() {
 }
 
 /* ==========================================
-   4. EFFET D'INCLINAISON ET RIPPLE (UI/UX)
+   4. EFFET D'INCLINAISON ET RIPPLE
    ========================================== */
 function initTiltEffect() {
     const buttons = document.querySelectorAll('.link-btn');

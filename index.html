@@ -12,12 +12,10 @@
     <meta property="og:url" content="https://blackamber.fr">
     <meta name="twitter:card" content="summary_large_image">
 
-    <!-- Bibliothèque d'icônes légères -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- Contexte de fond animé -->
     <canvas id="sky-canvas"></canvas>
 
     <!-- Modale d'Age Gate (+18) -->
@@ -33,18 +31,17 @@
         </div>
     </div>
 
-    <!-- Conteneur principal -->
     <main class="container" id="main-content">
         
-        <!-- NOUVEAU : Bouton Thème (Jour / Nuit) -->
-        <button id="theme-btn" class="theme-btn" aria-label="Changer le thème">
-            <i class="ph ph-moon"></i>
-        </button>
-
-        <!-- Bouton Partager -->
-        <button id="share-btn" class="share-btn" aria-label="Partager ce profil">
-            <i class="ph ph-share-network"></i>
-        </button>
+        <!-- Barre d'actions supérieure centrée -->
+        <div class="top-bar">
+            <button id="theme-btn" class="action-btn" aria-label="Changer le thème">
+                <i id="theme-icon" class="ph ph-moon"></i>
+            </button>
+            <button id="share-btn" class="action-btn" aria-label="Partager ce profil">
+                <i class="ph ph-share-network"></i>
+            </button>
+        </div>
 
         <!-- En-tête -->
         <header class="profile-header">
@@ -72,11 +69,13 @@
             </a>
         </section>
 
-        <!-- Section 2 : Plateformes Exclusives -->
+        <!-- Section 2 : Plateformes Exclusives avec Badge VIP -->
         <section class="link-group">
             <h2>Plateformes Exclusives</h2>
             <a href="https://onlyfans.com/blackamberx" class="link-btn highlight" target="_blank" rel="noopener noreferrer">
                 <i class="ph ph-lock-key"></i> OnlyFans
+                <!-- Le fameux badge VIP animé -->
+                <span class="badge-vip">✨ VIP</span>
             </a>
             <a href="https://mym.fans/Xblackamber" class="link-btn highlight" target="_blank" rel="noopener noreferrer">
                 <i class="ph ph-star"></i> MYM
