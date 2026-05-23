@@ -1,20 +1,37 @@
 :root {
-    /* Thème Blue Sky (Blanc & Turquoise très clair) */
+    /* Couleurs de base (Communes) */
     --accent-turquoise: #15b8a6;
     --accent-glow: rgba(21, 184, 166, 0.4);
     
-    /* Textes foncés */
+    /* THEME JOUR (Blue Sky) */
+    --bg-gradient: linear-gradient(-45deg, #f0fdfa, #ffffff, #e0f2fe, #ccfbf1);
     --text-main: #0f172a; 
     --text-muted: #475569; 
-    
-    /* Glassmorphism */
     --glass-bg: rgba(255, 255, 255, 0.6);
     --glass-border: rgba(255, 255, 255, 1);
     --glass-shadow: rgba(0, 0, 0, 0.05);
-    
-    /* Plateformes exclusives */
     --glass-highlight-bg: rgba(21, 184, 166, 0.1);
     --glass-highlight-border: rgba(21, 184, 166, 0.4);
+    --highlight-text: #0f766e;
+    --avatar-border: #ffffff;
+    --ripple-color: rgba(0, 0, 0, 0.05);
+    --btn-hover-bg: rgba(255, 255, 255, 0.9);
+}
+
+[data-theme="dark"] {
+    /* THEME NUIT (Galactique) */
+    --bg-gradient: linear-gradient(-45deg, #020617, #0f172a, #1e1b4b, #020617);
+    --text-main: #f8fafc; 
+    --text-muted: #cbd5e1; 
+    --glass-bg: rgba(255, 255, 255, 0.03);
+    --glass-border: rgba(255, 255, 255, 0.08);
+    --glass-shadow: rgba(0, 0, 0, 0.3);
+    --glass-highlight-bg: rgba(21, 184, 166, 0.1);
+    --glass-highlight-border: rgba(21, 184, 166, 0.3);
+    --highlight-text: #5eead4; /* Turquoise plus clair pour ressortir sur fond noir */
+    --avatar-border: var(--accent-turquoise);
+    --ripple-color: rgba(255, 255, 255, 0.1);
+    --btn-hover-bg: rgba(255, 255, 255, 0.08);
 }
 
 * {
@@ -26,7 +43,7 @@
 }
 
 body {
-    background: linear-gradient(-45deg, #f0fdfa, #ffffff, #e0f2fe, #ccfbf1);
+    background: var(--bg-gradient);
     background-size: 400% 400%;
     animation: gradientBG 15s ease infinite;
     color: var(--text-main);
@@ -36,6 +53,7 @@ body {
     padding: 4rem 1.5rem;
     position: relative;
     overflow-x: hidden;
+    transition: color 0.5s ease;
 }
 
 #sky-canvas {
@@ -49,7 +67,7 @@ body {
 }
 
 /* =========================================
-   NOUVEAU : MODALE AGE GATE (+18)
+   MODALE AGE GATE (+18)
 ========================================= */
 .age-gate-overlay {
     position: fixed;
@@ -57,7 +75,7 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(255, 255, 255, 0.3);
+    background: rgba(0, 0, 0, 0.2);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     display: flex;
@@ -80,9 +98,9 @@ body {
     padding: 2.5rem 1.5rem;
     text-align: center;
     max-width: 400px;
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
     transform: translateY(0);
-    transition: transform 0.5s ease;
+    transition: transform 0.5s ease, background 0.5s ease, border 0.5s ease;
 }
 
 .age-gate-overlay.hidden .age-gate-card {
@@ -95,23 +113,9 @@ body {
     margin-bottom: 1rem;
 }
 
-.age-gate-card h2 {
-    font-size: 1.5rem;
-    margin-bottom: 0.5rem;
-}
-
-.age-gate-card p {
-    font-size: 0.95rem;
-    color: var(--text-muted);
-    margin-bottom: 2rem;
-    line-height: 1.5;
-}
-
-.age-gate-actions {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-}
+.age-gate-card h2 { font-size: 1.5rem; margin-bottom: 0.5rem; }
+.age-gate-card p { font-size: 0.95rem; color: var(--text-muted); margin-bottom: 2rem; line-height: 1.5; }
+.age-gate-actions { display: flex; flex-direction: column; gap: 1rem; }
 
 .age-btn {
     padding: 1rem;
@@ -129,11 +133,7 @@ body {
     border: none;
     box-shadow: 0 4px 15px var(--accent-glow);
 }
-
-.age-btn.primary:hover {
-    background: #0d9488;
-    transform: scale(1.02);
-}
+.age-btn.primary:hover { background: #0d9488; transform: scale(1.02); }
 
 .age-btn.secondary {
     background: transparent;
@@ -142,7 +142,7 @@ body {
 }
 
 /* =========================================
-   CONTENEUR PRINCIPAL & BOUTON PARTAGE
+   CONTENEUR & BOUTONS D'EN TÊTE (Share / Theme)
 ========================================= */
 .container {
     width: 100%;
@@ -151,14 +151,12 @@ body {
     flex-direction: column;
     gap: 2.5rem;
     z-index: 1;
-    opacity: 0; /* Caché au départ, géré par JS après Age Gate */
+    opacity: 0;
 }
 
-/* Le bouton Share en haut à droite */
-.share-btn {
+.share-btn, .theme-btn {
     position: absolute;
     top: 1.5rem;
-    right: 1.5rem;
     width: 45px;
     height: 45px;
     border-radius: 50%;
@@ -172,15 +170,19 @@ body {
     font-size: 1.25rem;
     cursor: pointer;
     box-shadow: 0 4px 15px var(--glass-shadow);
-    transition: transform 0.2s ease, background 0.2s ease;
+    transition: transform 0.2s ease, background 0.3s ease, border 0.3s ease, color 0.3s ease;
     z-index: 10;
 }
 
-.share-btn:hover {
+.share-btn { right: 1.5rem; }
+.theme-btn { left: 1.5rem; } /* Le bouton thème à gauche */
+
+.share-btn:hover, .theme-btn:hover {
     transform: scale(1.1);
-    background: #ffffff;
+    background: var(--btn-hover-bg);
 }
 
+/* En-tête de profil */
 .profile-header { text-align: center; }
 
 .avatar-container {
@@ -195,92 +197,60 @@ body {
     height: 110px;
     border-radius: 50%;
     object-fit: cover;
-    border: 3px solid #ffffff;
+    border: 3px solid var(--avatar-border);
     box-shadow: 0 10px 25px var(--accent-glow);
+    transition: border-color 0.5s ease;
 }
 
-.profile-header h1 {
-    font-size: 1.75rem;
-    font-weight: 700;
-    margin-bottom: 0.5rem;
-}
+.profile-header h1 { font-size: 1.75rem; font-weight: 700; margin-bottom: 0.5rem; }
+.profile-header .bio { font-size: 0.95rem; color: var(--text-muted); line-height: 1.5; }
 
-.profile-header .bio {
-    font-size: 0.95rem;
-    color: var(--text-muted);
-    line-height: 1.5;
-}
-
-.link-group {
-    display: flex;
-    flex-direction: column;
-    gap: 1.2rem;
-}
-
+/* Groupes de liens */
+.link-group { display: flex; flex-direction: column; gap: 1.2rem; }
 .link-group h2 {
-    font-size: 0.8rem;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    text-align: center;
-    color: var(--accent-turquoise);
-    font-weight: 700;
+    font-size: 0.8rem; text-transform: uppercase; letter-spacing: 2px;
+    text-align: center; color: var(--accent-turquoise); font-weight: 700;
 }
 
-/* Boutons de liens modifiés pour intégrer l'icône */
+/* Boutons de liens (Adaptatifs) */
 .link-btn {
     position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.75rem; /* Espace entre icône et texte */
-    width: 100%;
-    min-height: 56px;
-    padding: 1rem;
+    display: flex; align-items: center; justify-content: center; gap: 0.75rem;
+    width: 100%; min-height: 56px; padding: 1rem;
     background: var(--glass-bg);
     border: 1px solid var(--glass-border);
     backdrop-filter: blur(12px);
     border-radius: 16px;
     color: var(--text-main);
     text-decoration: none;
-    font-weight: 600;
-    font-size: 1.05rem;
+    font-weight: 600; font-size: 1.05rem;
     overflow: hidden;
     box-shadow: 0 8px 32px var(--glass-shadow);
-    transition: transform 0.3s ease, background 0.3s ease;
+    transition: transform 0.3s ease, background 0.3s ease, border-color 0.3s ease, color 0.3s ease;
     
-    /* Préparation pour l'animation gérée par JS */
-    opacity: 0;
-    transform: translateY(30px);
+    opacity: 0; transform: translateY(30px);
 }
 
-.link-btn i {
-    font-size: 1.4rem; /* Taille de l'icône */
-}
-
-.link-btn:hover { background: rgba(255, 255, 255, 0.9); }
+.link-btn i { font-size: 1.4rem; }
+.link-btn:hover { background: var(--btn-hover-bg); }
 
 .link-btn.highlight {
     background: var(--glass-highlight-bg);
     border: 1px solid var(--glass-highlight-border);
-    color: #0f766e;
+    color: var(--highlight-text);
 }
 
-.link-btn.highlight:hover {
-    background: rgba(21, 184, 166, 0.15);
-}
+.link-btn.highlight:hover { background: rgba(21, 184, 166, 0.15); }
 
 /* Onde de clic */
 .ripple {
-    position: absolute;
-    border-radius: 50%;
-    transform: scale(0);
+    position: absolute; border-radius: 50%; transform: scale(0);
     animation: ripple-click 0.6s linear;
-    background-color: rgba(0, 0, 0, 0.05);
-    pointer-events: none;
+    background-color: var(--ripple-color); pointer-events: none;
 }
 .link-btn.highlight .ripple { background-color: rgba(21, 184, 166, 0.2); }
 
-/* Animations et Keyframes */
+/* Animations */
 @keyframes gradientBG {
     0% { background-position: 0% 50%; }
     50% { background-position: 100% 50%; }
@@ -290,17 +260,11 @@ body {
     0%, 100% { transform: translateY(0px); }
     50% { transform: translateY(-10px); }
 }
-@keyframes ripple-click {
-    to { transform: scale(4); opacity: 0; }
-}
-@keyframes fadeInUpElastic {
-    to { opacity: 1; transform: translateY(0); }
-}
+@keyframes ripple-click { to { transform: scale(4); opacity: 0; } }
+@keyframes fadeInUpElastic { to { opacity: 1; transform: translateY(0); } }
 
-/* Activation des animations des boutons uniquement quand le conteneur est visible */
 .container.loaded { opacity: 1; transition: opacity 0.5s ease; }
 .container.loaded .link-btn { animation: fadeInUpElastic 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
-
 .container.loaded .link-group:nth-of-type(1) .link-btn:nth-child(2) { animation-delay: 0.1s; }
 .container.loaded .link-group:nth-of-type(1) .link-btn:nth-child(3) { animation-delay: 0.2s; }
 .container.loaded .link-group:nth-of-type(1) .link-btn:nth-child(4) { animation-delay: 0.3s; }
@@ -313,4 +277,5 @@ body {
     body { padding: 2.5rem 1rem; }
     .container { gap: 2rem; }
     .share-btn { top: 1rem; right: 1rem; }
+    .theme-btn { top: 1rem; left: 1rem; }
 }

@@ -5,21 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Black Amber | Liens Officiels</title>
     
-    <!-- Meta Tags Open Graph pour un partage élégant sur les réseaux (SEO) -->
     <meta name="description" content="Découvrez l'univers exclusif de Black Amber. Retrouvez tous mes réseaux sociaux et plateformes VIP.">
     <meta property="og:title" content="Black Amber | Liens Officiels">
     <meta property="og:description" content="Retrouvez tous mes réseaux et plateformes exclusives.">
-    <meta property="og:image" content="https://blackamber.fr/pdp.png"> <!-- Mets le lien vers ta vraie photo ou une bannière -->
+    <meta property="og:image" content="https://blackamber.fr/placeholder.jpg">
     <meta property="og:url" content="https://blackamber.fr">
     <meta name="twitter:card" content="summary_large_image">
 
-    <!-- Bibliothèque d'icônes légères (Phosphor Icons) -->
+    <!-- Bibliothèque d'icônes légères -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
-
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- Contexte de fond animé (Réseau de particules) -->
+    <!-- Contexte de fond animé -->
     <canvas id="sky-canvas"></canvas>
 
     <!-- Modale d'Age Gate (+18) -->
@@ -35,10 +33,15 @@
         </div>
     </div>
 
-    <!-- Le conteneur principal reste masqué jusqu'à la vérification de l'âge -->
+    <!-- Conteneur principal -->
     <main class="container" id="main-content">
         
-        <!-- Bouton Partager (Native Share) -->
+        <!-- NOUVEAU : Bouton Thème (Jour / Nuit) -->
+        <button id="theme-btn" class="theme-btn" aria-label="Changer le thème">
+            <i class="ph ph-moon"></i>
+        </button>
+
+        <!-- Bouton Partager -->
         <button id="share-btn" class="share-btn" aria-label="Partager ce profil">
             <i class="ph ph-share-network"></i>
         </button>
@@ -46,7 +49,7 @@
         <!-- En-tête -->
         <header class="profile-header">
             <div class="avatar-container">
-                <img src="pdp.png" alt="Photo de profil Black Amber" class="avatar">
+                <img src="placeholder.jpg" alt="Photo de profil Black Amber" class="avatar">
             </div>
             <h1>Black Amber</h1>
             <p class="bio">Créatrice de contenu • Univers exclusif & créatif</p>

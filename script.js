@@ -1,10 +1,43 @@
 document.addEventListener('DOMContentLoaded', () => {
+    initThemeToggle(); // NOUVEAU : Lance la gestion du thème
     initNetworkBackground();
     initAgeGate();
     initShareButton();
     initTiltEffect();
     initRippleEffect();
 });
+
+/* ==========================================
+   0. GESTION DU THÈME (Jour / Nuit)
+   ========================================== */
+function initThemeToggle() {
+    const themeBtn = document.getElementById('theme-btn');
+    const icon = themeBtn.querySelector('i');
+    
+    // Récupérer la préférence sauvegardée
+    const savedTheme = localStorage.getItem('blackamber_theme');
+    
+    // Appliquer le thème sauvegardé
+    if (savedTheme === 'dark') {
+        document.body.setAttribute('data-theme', 'dark');
+        icon.classList.replace('ph-moon', 'ph-sun');
+    }
+
+    // Gérer le clic sur le bouton
+    themeBtn.addEventListener('click', () => {
+        const currentTheme = document.body.getAttribute('data-theme');
+        
+        if (currentTheme === 'dark') {
+            document.body.removeAttribute('data-theme');
+            icon.classList.replace('ph-sun', 'ph-moon');
+            localStorage.setItem('blackamber_theme', 'light');
+        } else {
+            document.body.setAttribute('data-theme', 'dark');
+            icon.classList.replace('ph-moon', 'ph-sun');
+            localStorage.setItem('blackamber_theme', 'dark');
+        }
+    });
+}
 
 /* ==========================================
    1. GESTION DE LA MODALE AGE GATE (+18)
@@ -14,12 +47,8 @@ function initAgeGate() {
     const btnYes = document.getElementById('btn-yes');
     const mainContent = document.getElementById('main-content');
 
-    // La modale s'affiche systématiquement à chaque chargement de page.
     btnYes.addEventListener('click', () => {
-        // Au clic sur "Oui", on lance l'animation de disparition
         ageGate.classList.add('hidden');
-        
-        // On attend la fin du fondu (500ms) pour révéler le site et lancer ses animations
         setTimeout(() => {
             ageGate.style.display = 'none';
             mainContent.classList.add('loaded');
@@ -32,12 +61,10 @@ function initAgeGate() {
    ========================================== */
 function initShareButton() {
     const shareBtn = document.getElementById('share-btn');
-    
     if (!navigator.share) {
         shareBtn.style.display = 'none';
         return;
     }
-
     shareBtn.addEventListener('click', async () => {
         try {
             await navigator.share({
@@ -45,7 +72,6 @@ function initShareButton() {
                 text: 'Découvrez l\'univers exclusif de Black Amber.',
                 url: window.location.href
             });
-            console.log('Partage réussi !');
         } catch (err) {
             console.log('Partage annulé ou erreur :', err);
         }
