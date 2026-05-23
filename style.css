@@ -145,7 +145,6 @@ body {
     opacity: 0; transform: translateY(30px);
 }
 
-.link-btn i { font-size: 1.4rem; }
 .link-btn:hover { background: var(--btn-hover-bg); }
 
 .link-btn.highlight {
@@ -154,6 +153,14 @@ body {
     color: var(--highlight-text);
 }
 .link-btn.highlight:hover { background: rgba(21, 184, 166, 0.15); }
+
+/* NOUVEAU : Réglage de la taille de tes images personnalisées */
+.link-icon {
+    width: 24px;
+    height: 24px;
+    object-fit: contain; /* Assure que l'image ne soit pas déformée */
+    flex-shrink: 0; /* Empêche l'image de s'écraser si le texte est long */
+}
 
 .ripple {
     position: absolute; border-radius: 50%; transform: scale(0);
